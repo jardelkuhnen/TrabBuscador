@@ -13,4 +13,8 @@ public @interface Coluna {
 
 	boolean pk() default false;
 
+	int posicao() default 0;
+
+	String value() default "";
+
 }

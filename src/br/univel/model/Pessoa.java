@@ -1,5 +1,7 @@
 package br.univel.model;
 
+import java.io.ObjectInputStream.GetField;
+
 import br.univel.anotacoes.Coluna;
 import br.univel.anotacoes.Tabela;
 
@@ -9,7 +11,7 @@ public class Pessoa {
 	@Coluna(nome = "id", pk = true)
 	private Integer id;
 
-	@Coluna(nome = "nome")
+	@Coluna(nome = "nome", posicao = 1)
 	private String nome;
 
 	@Coluna(nome = "idade")
@@ -17,6 +19,13 @@ public class Pessoa {
 
 	@Coluna(nome = "profissao")
 	private String profissao;
+
+	public Pessoa(Integer id, String nome, Integer idade, String profissao) {
+		this.id = id;
+		this.nome = nome;
+		this.idade = idade;
+		this.profissao = profissao;
+	}
 
 	public Integer getId() {
 		return id;

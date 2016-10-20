@@ -27,10 +27,10 @@ public class Principal extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtCriterio;
 	private JTabbedPane tabbedPane;
-	private JPanel panel_1;
-	private JPanel panel_2;
-	private JPanel panel_3;
-	private JPanel panel_4;
+	private JPanel pnPostgres;
+	private JPanel pnMysql;
+	private JPanel pnArq;
+	private JPanel pnGoogle;
 	private JTable tblPostgres;
 	private JTable tblMySql;
 	private JTextArea textArea;
@@ -74,52 +74,52 @@ public class Principal extends JFrame {
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		panel.add(tabbedPane, BorderLayout.CENTER);
 
-		panel_1 = new JPanel();
-		tabbedPane.addTab("Postgres", null, panel_1, null);
-		GridBagLayout gbl_panel_1 = new GridBagLayout();
-		gbl_panel_1.columnWidths = new int[]{0, 0};
-		gbl_panel_1.rowHeights = new int[]{0, 0};
-		gbl_panel_1.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_panel_1.rowWeights = new double[]{1.0, Double.MIN_VALUE};
-		panel_1.setLayout(gbl_panel_1);
+		pnPostgres = new JPanel();
+		tabbedPane.addTab("Postgres", null, pnPostgres, null);
+		GridBagLayout gbl_pnPostgres = new GridBagLayout();
+		gbl_pnPostgres.columnWidths = new int[]{0, 0};
+		gbl_pnPostgres.rowHeights = new int[]{0, 0};
+		gbl_pnPostgres.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_pnPostgres.rowWeights = new double[]{1.0, Double.MIN_VALUE};
+		pnPostgres.setLayout(gbl_pnPostgres);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane.gridx = 0;
 		gbc_scrollPane.gridy = 0;
-		panel_1.add(scrollPane, gbc_scrollPane);
+		pnPostgres.add(scrollPane, gbc_scrollPane);
 		
 		tblPostgres = new JTable();
 		scrollPane.setViewportView(tblPostgres);
 
-		panel_2 = new JPanel();
-		tabbedPane.addTab("MySql", null, panel_2, null);
-		GridBagLayout gbl_panel_2 = new GridBagLayout();
-		gbl_panel_2.columnWidths = new int[]{0, 0};
-		gbl_panel_2.rowHeights = new int[]{0, 0};
-		gbl_panel_2.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_panel_2.rowWeights = new double[]{1.0, Double.MIN_VALUE};
-		panel_2.setLayout(gbl_panel_2);
+		pnMysql = new JPanel();
+		tabbedPane.addTab("MySql", null, pnMysql, null);
+		GridBagLayout gbl_pnMysql = new GridBagLayout();
+		gbl_pnMysql.columnWidths = new int[]{0, 0};
+		gbl_pnMysql.rowHeights = new int[]{0, 0};
+		gbl_pnMysql.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_pnMysql.rowWeights = new double[]{1.0, Double.MIN_VALUE};
+		pnMysql.setLayout(gbl_pnMysql);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
 		gbc_scrollPane_1.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane_1.gridx = 0;
 		gbc_scrollPane_1.gridy = 0;
-		panel_2.add(scrollPane_1, gbc_scrollPane_1);
+		pnMysql.add(scrollPane_1, gbc_scrollPane_1);
 		
 		tblMySql = new JTable();
 		scrollPane_1.setViewportView(tblMySql);
 
-		panel_3 = new JPanel();
-		tabbedPane.addTab("Arquivos", null, panel_3, null);
-		GridBagLayout gbl_panel_3 = new GridBagLayout();
-		gbl_panel_3.columnWidths = new int[]{36, 419, 0};
-		gbl_panel_3.rowHeights = new int[]{30, 369, 0};
-		gbl_panel_3.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gbl_panel_3.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-		panel_3.setLayout(gbl_panel_3);
+		pnArq = new JPanel();
+		tabbedPane.addTab("Arquivos", null, pnArq, null);
+		GridBagLayout gbl_pnArq = new GridBagLayout();
+		gbl_pnArq.columnWidths = new int[]{36, 419, 0};
+		gbl_pnArq.rowHeights = new int[]{30, 369, 0};
+		gbl_pnArq.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
+		gbl_pnArq.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		pnArq.setLayout(gbl_pnArq);
 		
 		lblPath = new JLabel("Path:");
 		GridBagConstraints gbc_lblPath = new GridBagConstraints();
@@ -127,7 +127,7 @@ public class Principal extends JFrame {
 		gbc_lblPath.insets = new Insets(0, 0, 5, 5);
 		gbc_lblPath.gridx = 0;
 		gbc_lblPath.gridy = 0;
-		panel_3.add(lblPath, gbc_lblPath);
+		pnArq.add(lblPath, gbc_lblPath);
 		
 		txtPath = new JTextField();
 		txtPath.setText("D:\\");
@@ -136,7 +136,7 @@ public class Principal extends JFrame {
 		gbc_txtPath.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtPath.gridx = 1;
 		gbc_txtPath.gridy = 0;
-		panel_3.add(txtPath, gbc_txtPath);
+		pnArq.add(txtPath, gbc_txtPath);
 		txtPath.setColumns(10);
 		
 		textArea = new JTextArea();
@@ -145,29 +145,30 @@ public class Principal extends JFrame {
 		gbc_textArea.fill = GridBagConstraints.BOTH;
 		gbc_textArea.gridx = 0;
 		gbc_textArea.gridy = 1;
-		panel_3.add(textArea, gbc_textArea);
+		pnArq.add(textArea, gbc_textArea);
 
-		panel_4 = new JPanel();
-		tabbedPane.addTab("Google", null, panel_4, null);
-		GridBagLayout gbl_panel_4 = new GridBagLayout();
-		gbl_panel_4.columnWidths = new int[]{0, 0};
-		gbl_panel_4.rowHeights = new int[]{0, 0};
-		gbl_panel_4.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_panel_4.rowWeights = new double[]{1.0, Double.MIN_VALUE};
-		panel_4.setLayout(gbl_panel_4);
+		pnGoogle = new JPanel();
+		tabbedPane.addTab("Google", null, pnGoogle, null);
+		GridBagLayout gbl_pnGoogle = new GridBagLayout();
+		gbl_pnGoogle.columnWidths = new int[]{0, 0};
+		gbl_pnGoogle.rowHeights = new int[]{0, 0};
+		gbl_pnGoogle.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_pnGoogle.rowWeights = new double[]{1.0, Double.MIN_VALUE};
+		pnGoogle.setLayout(gbl_pnGoogle);
 		
 		textArea_1 = new JTextArea();
 		GridBagConstraints gbc_textArea_1 = new GridBagConstraints();
 		gbc_textArea_1.fill = GridBagConstraints.BOTH;
 		gbc_textArea_1.gridx = 0;
 		gbc_textArea_1.gridy = 0;
-		panel_4.add(textArea_1, gbc_textArea_1);
+		pnGoogle.add(textArea_1, gbc_textArea_1);
 
 		txtCriterio = new JTextField();
 		panel.add(txtCriterio, BorderLayout.NORTH);
 		txtCriterio.setToolTipText("Informe o critério de busca...");
 		txtCriterio.setText("Informe o critério de busca...");
 		txtCriterio.setColumns(10);
+		
 
 	}
 }
