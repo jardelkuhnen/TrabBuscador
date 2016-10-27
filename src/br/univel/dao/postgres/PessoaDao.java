@@ -17,11 +17,16 @@ public class PessoaDao {
 
 	List<Pessoa> pessoas = new ArrayList<Pessoa>();
 
-	public List getPessoas(String text) {
+	public List<Pessoa> getPessoas(Pessoa pessoa) {
 
 		try {
 
 			PreparedStatement stmt = con.prepareStatement(SQL_SELECT);
+
+			stmt.setInt(1, pessoa.getId());
+			stmt.setString(2, pessoa.getNome());
+			stmt.setInt(3, pessoa.getIdade());
+			stmt.setString(4, pessoa.getProfissao());
 
 			rs = stmt.executeQuery();
 
@@ -44,7 +49,7 @@ public class PessoaDao {
 		Integer id = rs.getInt("id");
 		String nome = rs.getString("nome");
 		Integer idade = rs.getInt("idade");
-		String profissao = rs.getString("peofissao");
+		String profissao = rs.getString("profissao");
 
 		return new Pessoa(id, nome, idade, profissao);
 	}

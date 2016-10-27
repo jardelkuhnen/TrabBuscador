@@ -1,23 +1,17 @@
 package br.univel.model;
 
-import java.io.ObjectInputStream.GetField;
-
 import br.univel.anotacoes.Coluna;
 import br.univel.anotacoes.Tabela;
 
 @Tabela("Pessoa")
 public class Pessoa {
 
-	@Coluna(nome = "id", pk = true)
 	private Integer id;
 
-	@Coluna(nome = "nome", posicao = 1)
 	private String nome;
 
-	@Coluna(nome = "idade")
 	private Integer idade;
 
-	@Coluna(nome = "profissao")
 	private String profissao;
 
 	public Pessoa(Integer id, String nome, Integer idade, String profissao) {
@@ -27,6 +21,10 @@ public class Pessoa {
 		this.profissao = profissao;
 	}
 
+	public Pessoa() {
+	}
+
+	@Coluna(nome = "Id", pk = true)
 	public Integer getId() {
 		return id;
 	}
@@ -35,6 +33,7 @@ public class Pessoa {
 		this.id = id;
 	}
 
+	@Coluna(nome = "Nome", posicao = 1)
 	public String getNome() {
 		return nome;
 	}
@@ -43,6 +42,7 @@ public class Pessoa {
 		this.nome = nome;
 	}
 
+	@Coluna(nome = "Idade")
 	public Integer getIdade() {
 		return idade;
 	}
@@ -51,6 +51,7 @@ public class Pessoa {
 		this.idade = idade;
 	}
 
+	@Coluna(nome = "Profissão")
 	public String getProfissao() {
 		return profissao;
 	}
@@ -61,8 +62,7 @@ public class Pessoa {
 
 	@Override
 	public String toString() {
-		return "Pessoa [id=" + id + ", nome=" + nome + ", idade=" + idade
-				+ ", profissao=" + profissao + "]";
+		return "Pessoa [id=" + id + ", nome=" + nome + ", idade=" + idade + ", profissao=" + profissao + "]";
 	}
 
 }

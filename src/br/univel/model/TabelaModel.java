@@ -1,6 +1,6 @@
 package br.univel.model;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +16,11 @@ public class TabelaModel extends AbstractTableModel {
 		this.lista = lista;
 	}
 
-	@Override
+	public void incluir(List<Object> objeto) {
+		this.lista = objeto;
+		fireTableDataChanged();
+	}
+
 	public int getColumnCount() {
 
 		Object objeto = lista.get(0);
@@ -25,9 +29,9 @@ public class TabelaModel extends AbstractTableModel {
 
 		int colunas = 0;
 
-		for (Field field : classe.getDeclaredFields()) {
+		for (Method metodo : classe.getDeclaredMethods()) {
 
-			if (field.isAnnotationPresent(Coluna.class)) {
+			if (metodo.isAnnotationPresent(Coluna.class)) {
 				colunas++;
 
 			}
@@ -36,36 +40,56 @@ public class TabelaModel extends AbstractTableModel {
 		return colunas;
 	}
 
-	@Override
 	public int getRowCount() {
 
 		return lista.size();
 	}
 
-	@Override
 	public Object getValueAt(int row, int column) {
 
 		Object objeto = lista.get(0);
 
 		Class<?> classe = objeto.getClass();
 
-		for (Field field : classe.getDeclaredFields()) {
+		try {
+			for (Method method : classe.getDeclaredMethods()) {
 
-			Coluna anotacao = field.getAnnotation(Coluna.class);
+				Coluna anotacao = method.getAnnotation(Coluna.class);
 
-			if (anotacao.posicao() == column) {
+				if (anotacao.posicao() == column) {
+					return method.invoke(objeto);
+				}
 
 			}
-
+		} catch (Exception e) {
+			return "Algo deu errado";
 		}
 
-		return null;
+		return "";
 	}
 
 	@Override
 	public String getColumnName(int column) {
 
-		return super.getColumnName(column);
+		Object objeto = lista.get(0);
+
+		Class<?> classe = objeto.getClass();
+
+		for (Method metodo : classe.getDeclaredMethods()) {
+			if (metodo.isAnnotationPresent(Coluna.class)) {
+
+				Coluna anotacao = metodo.getAnnotation(Coluna.class);
+
+				if (anotacao.posicao() == column) {
+
+					return anotacao.nome();
+				}
+
+			}
+
+		}
+		return "erro";
+
 	}
 
 }

@@ -1,0 +1,5 @@
+insert into Pessoa(nome, idade, profissao) values ('Neide', 40, 'Balconista');
+insert into Pessoa(nome, idade, profissao) values ('Paulo', 49, 'Motorista');
+insert into Pessoa(nome, idade, profissao) values ('Diego', 17, 'Faz nada');
+insert into Pessoa(nome, idade, profissao) values ('Alyson', 7, 'Come dorme');
+insert into Pessoa(nome, idade, profissao) values ('Aline', 21, 'Suporte');
