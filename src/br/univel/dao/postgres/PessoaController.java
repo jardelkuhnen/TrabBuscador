@@ -9,13 +9,16 @@ public class PessoaController {
 	public List<Pessoa> buscarDados(String criterio) {
 
 		int temNumero = 0;
+		int numeroEncontrado = 0;
 
 		Pessoa pessoa = new Pessoa();
 
 		for (int i = 0; i < criterio.length(); i++) {
-
+			
+			// Verifica se são apenas letras na busca, se tiver numeros entra no if
 			if (Character.isDigit(criterio.charAt(i)) == true) {
 				temNumero++;
+				numeroEncontrado = i;
 				break;
 			}
 
@@ -30,8 +33,8 @@ public class PessoaController {
 			pessoa.setIdade(0);
 
 		} else {
-			pessoa.setId(Integer.parseInt(criterio));
-			pessoa.setIdade(Integer.parseInt(criterio));
+			pessoa.setId(numeroEncontrado);
+			pessoa.setIdade(numeroEncontrado);
 
 		}
 
