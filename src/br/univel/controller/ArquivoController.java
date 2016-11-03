@@ -1,13 +1,14 @@
-package br.univel.cntroller;
+package br.univel.controller;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public class ArquivoController implements Callable {
+public class ArquivoController implements Callable<List<String>> {
 
 	private String criterio;
 	private String path;
@@ -20,7 +21,7 @@ public class ArquivoController implements Callable {
 
 	List<String> arquivosEncontrados = new ArrayList<String>();
 
-	public Object call() throws Exception {
+	public List<String> call() throws Exception {
 
 		File location = new File(path);
 
@@ -30,6 +31,7 @@ public class ArquivoController implements Callable {
 
 			File file = arqs[i];
 
+			System.out.println(file.getName());
 			FileReader fReader = new FileReader(file);
 			BufferedReader buffer = new BufferedReader(fReader);
 
@@ -39,11 +41,15 @@ public class ArquivoController implements Callable {
 
 				int vezes = linha.lastIndexOf(criterio);
 
-				if (vezes > 0) {
-					arquivosEncontrados.add(arqs[i].getName());
+				if (vezes >= 0) {
+					arquivosEncontrados.add(arqs[i].toString());
 				}
 
+				linha = buffer.readLine();
 			}
+
+			buffer.close();
+			fReader.close();
 
 		}
 

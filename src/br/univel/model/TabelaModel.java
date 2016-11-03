@@ -54,10 +54,13 @@ public class TabelaModel extends AbstractTableModel {
 		try {
 			for (Method method : classe.getDeclaredMethods()) {
 
-				Coluna anotacao = method.getAnnotation(Coluna.class);
+				if (method.isAnnotationPresent(Coluna.class)) {
 
-				if (anotacao.posicao() == column) {
-					return method.invoke(objeto);
+					Coluna anotacao = method.getAnnotation(Coluna.class);
+
+					if (anotacao.posicao() == column) {
+						return method.invoke(objeto);
+					}
 				}
 
 			}

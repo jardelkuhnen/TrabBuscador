@@ -6,19 +6,15 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Panel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -30,7 +26,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import br.univel.cntroller.ArquivoController;
+import br.univel.controller.ArquivoController;
 import br.univel.dao.PessoaController;
 import br.univel.enuns.TipoBanco;
 import br.univel.model.Pessoa;
@@ -46,7 +42,6 @@ public class Principal extends JFrame {
 	private JPanel pnArq;
 	private JPanel pnGoogle;
 	private JTable tblPostgres;
-	private JTable tblMySql;
 	private JTextArea txtArquivos;
 	private JTextArea txtGoogle;
 	private JLabel lblPath;
@@ -75,7 +70,7 @@ public class Principal extends JFrame {
 	 */
 	public Principal() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 450, 496);
+		setBounds(100, 100, 583, 496);
 		setLocationRelativeTo(null);
 		setTitle("Buscador de arquivos");
 		contentPane = new JPanel();
@@ -114,29 +109,17 @@ public class Principal extends JFrame {
 		tabbedPane.addTab("MySql", null, pnMysql, null);
 		GridBagLayout gbl_pnMysql = new GridBagLayout();
 		gbl_pnMysql.columnWidths = new int[] { 0, 0 };
-		gbl_pnMysql.rowHeights = new int[] { 0, 0, 0 };
+		gbl_pnMysql.rowHeights = new int[] { 0, 0 };
 		gbl_pnMysql.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-		gbl_pnMysql.rowWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		gbl_pnMysql.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
 		pnMysql.setLayout(gbl_pnMysql);
-
-		JScrollPane scrollPane_1 = new JScrollPane();
-		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
-		gbc_scrollPane_1.gridheight = 2;
-		gbc_scrollPane_1.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane_1.gridx = 0;
-		gbc_scrollPane_1.gridy = 0;
-		pnMysql.add(scrollPane_1, gbc_scrollPane_1);
-
-		tblMySql = new JTable();
-		scrollPane_1.setViewportView(tblMySql);
 
 		pnArq = new JPanel();
 		tabbedPane.addTab("Arquivos", null, pnArq, null);
 		GridBagLayout gbl_pnArq = new GridBagLayout();
 		gbl_pnArq.columnWidths = new int[] { 36, 419, 0, 0 };
 		gbl_pnArq.rowHeights = new int[] { 30, 369, 0 };
-		gbl_pnArq.columnWeights = new double[] { 0.0, 1.0, 0.0,
-				Double.MIN_VALUE };
+		gbl_pnArq.columnWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
 		gbl_pnArq.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
 		pnArq.setLayout(gbl_pnArq);
 
@@ -149,7 +132,7 @@ public class Principal extends JFrame {
 		pnArq.add(lblPath, gbc_lblPath);
 
 		txtPath = new JTextField();
-		txtPath.setText("D:\\");
+		txtPath.setText("E:\\Busca");
 		GridBagConstraints gbc_txtPath = new GridBagConstraints();
 		gbc_txtPath.gridwidth = 2;
 		gbc_txtPath.fill = GridBagConstraints.HORIZONTAL;
@@ -196,9 +179,13 @@ public class Principal extends JFrame {
 
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 
-//					buscarDadosPostgres(txtCriterio.getText().trim());
-//					buscarDadosMySql(txtCriterio.getText().trim());
-					buscarDadosArq(txtCriterio.getText().trim());
+					try {
+						buscarDadosPostgres(txtCriterio.getText().trim());
+						// buscarDadosMySql(txtCriterio.getText().trim());
+						// buscarDadosArq(txtCriterio.getText().trim());
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
 
 				}
 
@@ -208,16 +195,16 @@ public class Principal extends JFrame {
 
 	}
 
-	protected void buscarDadosArq(String criterio) {
+	protected void buscarDadosArq(String criterio) throws Exception {
 
-		File file = new File(txtPath.getText());
+		String path = txtPath.getText();
+		File file = new File(path);
 		File qtdFile[] = file.listFiles();
 
 		ExecutorService executor = Executors.newFixedThreadPool(qtdFile.length);
 
 		final Future<List<String>> future = executor
-				.submit(new ArquivoController(txtCriterio.getText().trim(),
-						txtPath.getText()));
+				.submit((Callable<List<String>>) new ArquivoController(criterio, path).call());
 
 		try {
 			List<String> arquivos = future.get();
@@ -244,22 +231,19 @@ public class Principal extends JFrame {
 
 	}
 
-	public void buscarDadosPostgres(String criterio) {
+	public void buscarDadosPostgres(final String criterio) {
 
-		final ExecutorService executor = Executors.newSingleThreadExecutor();
+		final ExecutorService executor = Executors.newFixedThreadPool(1);
 
-		final Future<List<Pessoa>> future = executor
-				.submit(new PessoaController(criterio, TipoBanco.POSTGRES));
-		List<Pessoa> dadosPostgres;
+		final Future<List<Pessoa>> future = executor.submit(new PessoaController(criterio, TipoBanco.POSTGRES));
 
 		try {
-			dadosPostgres = future.get();
+			List<Pessoa> dadosPostgres = future.get();
 
 			model = new TabelaModel(dadosPostgres);
 
 			if (dadosPostgres.size() == 0) {
-				JOptionPane.showMessageDialog(Principal.this,
-						"Nenhuma informação encontrada no banco Postgres",
+				JOptionPane.showMessageDialog(Principal.this, "Nenhuma informação encontrada no banco Postgres",
 						"Atenção", JOptionPane.WARNING_MESSAGE);
 			} else {
 				tblPostgres.setModel(model);

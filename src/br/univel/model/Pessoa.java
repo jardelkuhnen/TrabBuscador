@@ -24,7 +24,7 @@ public class Pessoa {
 	public Pessoa() {
 	}
 
-	@Coluna(nome = "Id", pk = true)
+	@Coluna(nome = "Id", pk = true, posicao = 0)
 	public Integer getId() {
 		return id;
 	}
@@ -42,7 +42,7 @@ public class Pessoa {
 		this.nome = nome;
 	}
 
-	@Coluna(nome = "Idade")
+	@Coluna(nome = "Idade", posicao = 2)
 	public Integer getIdade() {
 		return idade;
 	}
@@ -51,7 +51,7 @@ public class Pessoa {
 		this.idade = idade;
 	}
 
-	@Coluna(nome = "Profissão")
+	@Coluna(nome = "Profissão", posicao = 3)
 	public String getProfissao() {
 		return profissao;
 	}
