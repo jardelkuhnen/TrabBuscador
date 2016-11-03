@@ -10,7 +10,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -24,7 +29,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import br.univel.dao.postgres.PessoaController;
+import br.univel.TipoBanco;
+import br.univel.dao.PessoaController;
 import br.univel.model.Pessoa;
 import br.univel.model.TabelaModel;
 
@@ -44,7 +50,6 @@ public class Principal extends JFrame {
 	private JLabel lblPath;
 	private JTextField txtPath;
 
-	private List<Pessoa> dadosPostgres;
 	private TabelaModel model;
 
 	/**
@@ -190,6 +195,7 @@ public class Principal extends JFrame {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 
 					buscarDadosPostgres(txtCriterio.getText().trim());
+					buscarDadosMySql(txtCriterio.getText().trim());
 
 				}
 
@@ -199,20 +205,38 @@ public class Principal extends JFrame {
 
 	}
 
+	protected void buscarDadosMySql(String criterio) {
+
+		final ExecutorService executor = Executors.newSingleThreadExecutor();
+
+		//Continuar implementação para o banco MySql.
+		
+	}
+
 	public void buscarDadosPostgres(String criterio) {
 
-		dadosPostgres = new PessoaController().buscarDados(criterio);
-		model = new TabelaModel(dadosPostgres);
+		final ExecutorService executor = Executors.newSingleThreadExecutor();
 
-		if (dadosPostgres.size() == 0) {
-			JOptionPane.showMessageDialog(Principal.this,
-					"Nenhuma informação encontrada no banco Postgres",
-					"Atenção", JOptionPane.WARNING_MESSAGE);
-		} else {
-			tblPostgres.setModel(model);
+		final Future<List<Pessoa>> future = executor
+				.submit(new PessoaController(criterio, TipoBanco.POSTGRES));
+		List<Pessoa> dadosPostgres;
 
+		try {
+			dadosPostgres = future.get();
+
+			model = new TabelaModel(dadosPostgres);
+
+			if (dadosPostgres.size() == 0) {
+				JOptionPane.showMessageDialog(Principal.this,
+						"Nenhuma informação encontrada no banco Postgres",
+						"Atenção", JOptionPane.WARNING_MESSAGE);
+			} else {
+				tblPostgres.setModel(model);
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}
-
 }

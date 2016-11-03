@@ -1,4 +1,4 @@
-package br.univel.dao.postgres;
+package br.univel.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

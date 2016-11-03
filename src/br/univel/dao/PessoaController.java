@@ -1,0 +1,56 @@
+package br.univel.dao;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.Callable;
+
+import br.univel.TipoBanco;
+import br.univel.model.Pessoa;
+
+public class PessoaController implements Callable<List<Pessoa>> {
+
+	private String criterio;
+	private TipoBanco tipoBanco;
+
+	public PessoaController(final String criterio, TipoBanco tipoBanco) {
+		this.criterio = criterio;
+		this.tipoBanco = tipoBanco;
+	}
+
+	public List<Pessoa> call() throws Exception {
+		int temNumero = 0;
+		int numeroEncontrado = 0;
+
+		Pessoa pessoa = new Pessoa();
+
+		for (int i = 0; i < criterio.length(); i++) {
+
+			// Verifica se são apenas letras na busca, se tiver numeros entra no
+			// if
+			if (Character.isDigit(criterio.charAt(i)) == true) {
+				temNumero++;
+				numeroEncontrado = i;
+				break;
+			}
+
+		}
+
+		pessoa.setNome(criterio);
+		pessoa.setProfissao(criterio);
+
+		if (temNumero <= 0) {
+
+			pessoa.setId(0);
+			pessoa.setIdade(0);
+
+		} else {
+			pessoa.setId(numeroEncontrado);
+			pessoa.setIdade(numeroEncontrado);
+
+		}
+
+		return new PessoaDao(tipoBanco).getPessoas(pessoa);
+	}
+
+}
