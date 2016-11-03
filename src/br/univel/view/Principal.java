@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -29,8 +30,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import br.univel.TipoBanco;
+import br.univel.cntroller.ArquivoController;
 import br.univel.dao.PessoaController;
+import br.univel.enuns.TipoBanco;
 import br.univel.model.Pessoa;
 import br.univel.model.TabelaModel;
 
@@ -194,8 +196,9 @@ public class Principal extends JFrame {
 
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 
-					buscarDadosPostgres(txtCriterio.getText().trim());
-					buscarDadosMySql(txtCriterio.getText().trim());
+//					buscarDadosPostgres(txtCriterio.getText().trim());
+//					buscarDadosMySql(txtCriterio.getText().trim());
+					buscarDadosArq(txtCriterio.getText().trim());
 
 				}
 
@@ -205,12 +208,40 @@ public class Principal extends JFrame {
 
 	}
 
+	protected void buscarDadosArq(String criterio) {
+
+		File file = new File(txtPath.getText());
+		File qtdFile[] = file.listFiles();
+
+		ExecutorService executor = Executors.newFixedThreadPool(qtdFile.length);
+
+		final Future<List<String>> future = executor
+				.submit(new ArquivoController(txtCriterio.getText().trim(),
+						txtPath.getText()));
+
+		try {
+			List<String> arquivos = future.get();
+
+			StringBuilder sb = new StringBuilder();
+
+			for (int i = 0; i < arquivos.size(); i++) {
+				sb.append(arquivos.get(i));
+			}
+
+			txtArquivos.setText(sb.toString());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	protected void buscarDadosMySql(String criterio) {
 
 		final ExecutorService executor = Executors.newSingleThreadExecutor();
 
-		//Continuar implementação para o banco MySql.
-		
+		// Continuar implementação para o banco MySql.
+
 	}
 
 	public void buscarDadosPostgres(String criterio) {

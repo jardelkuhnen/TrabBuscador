@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import br.univel.TipoBanco;
+import br.univel.enuns.TipoBanco;
 import br.univel.model.Pessoa;
 
 public class PessoaController implements Callable<List<Pessoa>> {

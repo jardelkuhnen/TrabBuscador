@@ -1,4 +1,4 @@
-package br.univel;
+package br.univel.enuns;
 
 public enum TipoBanco {
 

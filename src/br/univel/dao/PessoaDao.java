@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
-import br.univel.TipoBanco;
+import br.univel.enuns.TipoBanco;
 import br.univel.model.Pessoa;
 
 public class PessoaDao {
