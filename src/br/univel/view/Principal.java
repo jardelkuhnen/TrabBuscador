@@ -9,8 +9,10 @@ import java.awt.Panel;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -27,6 +29,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import br.univel.controller.ArquivoController;
+import br.univel.controller.GoogleSearchApi;
 import br.univel.dao.PessoaController;
 import br.univel.enuns.TipoBanco;
 import br.univel.model.Pessoa;
@@ -42,12 +45,14 @@ public class Principal extends JFrame {
 	private JPanel pnArq;
 	private JPanel pnGoogle;
 	private JTable tblPostgres;
-	private JTextArea txtArquivos;
-	private JTextArea txtGoogle;
 	private JLabel lblPath;
 	private JTextField txtPath;
 
 	private TabelaModel model;
+	private JScrollPane scrollPane_1;
+	private JTextArea txtGoogle;
+	private JScrollPane scrollPane_2;
+	private JTextArea txtArquivos;
 
 	/**
 	 * Launch the application.
@@ -120,7 +125,7 @@ public class Principal extends JFrame {
 		gbl_pnArq.columnWidths = new int[] { 36, 419, 0, 0 };
 		gbl_pnArq.rowHeights = new int[] { 30, 369, 0 };
 		gbl_pnArq.columnWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
-		gbl_pnArq.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
+		gbl_pnArq.rowWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
 		pnArq.setLayout(gbl_pnArq);
 
 		lblPath = new JLabel("Path:");
@@ -136,19 +141,23 @@ public class Principal extends JFrame {
 		GridBagConstraints gbc_txtPath = new GridBagConstraints();
 		gbc_txtPath.gridwidth = 2;
 		gbc_txtPath.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtPath.insets = new Insets(0, 0, 5, 5);
+		gbc_txtPath.insets = new Insets(0, 0, 5, 0);
 		gbc_txtPath.gridx = 1;
 		gbc_txtPath.gridy = 0;
 		pnArq.add(txtPath, gbc_txtPath);
 		txtPath.setColumns(10);
 
+		scrollPane_2 = new JScrollPane();
+		GridBagConstraints gbc_scrollPane_2 = new GridBagConstraints();
+		gbc_scrollPane_2.gridwidth = 3;
+		gbc_scrollPane_2.insets = new Insets(0, 0, 0, 5);
+		gbc_scrollPane_2.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane_2.gridx = 0;
+		gbc_scrollPane_2.gridy = 1;
+		pnArq.add(scrollPane_2, gbc_scrollPane_2);
+
 		txtArquivos = new JTextArea();
-		GridBagConstraints gbc_txtArquivos = new GridBagConstraints();
-		gbc_txtArquivos.gridwidth = 3;
-		gbc_txtArquivos.fill = GridBagConstraints.BOTH;
-		gbc_txtArquivos.gridx = 0;
-		gbc_txtArquivos.gridy = 1;
-		pnArq.add(txtArquivos, gbc_txtArquivos);
+		scrollPane_2.setViewportView(txtArquivos);
 
 		pnGoogle = new JPanel();
 		tabbedPane.addTab("Google", null, pnGoogle, null);
@@ -159,13 +168,16 @@ public class Principal extends JFrame {
 		gbl_pnGoogle.rowWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
 		pnGoogle.setLayout(gbl_pnGoogle);
 
+		scrollPane_1 = new JScrollPane();
+		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
+		gbc_scrollPane_1.gridheight = 2;
+		gbc_scrollPane_1.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane_1.gridx = 0;
+		gbc_scrollPane_1.gridy = 0;
+		pnGoogle.add(scrollPane_1, gbc_scrollPane_1);
+
 		txtGoogle = new JTextArea();
-		GridBagConstraints gbc_txtGoogle = new GridBagConstraints();
-		gbc_txtGoogle.gridheight = 2;
-		gbc_txtGoogle.fill = GridBagConstraints.BOTH;
-		gbc_txtGoogle.gridx = 0;
-		gbc_txtGoogle.gridy = 0;
-		pnGoogle.add(txtGoogle, gbc_txtGoogle);
+		scrollPane_1.setViewportView(txtGoogle);
 
 		txtCriterio = new JTextField();
 		panel.add(txtCriterio, BorderLayout.NORTH);
@@ -180,9 +192,12 @@ public class Principal extends JFrame {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 
 					try {
-						buscarDadosPostgres(txtCriterio.getText().trim());
-						// buscarDadosMySql(txtCriterio.getText().trim());
-						// buscarDadosArq(txtCriterio.getText().trim());
+
+						String criterio = txtCriterio.getText().trim();
+						buscarDadosPostgres(criterio);
+						// buscarDadosMySql(criterio);
+						// buscarDadosArq(criterio);
+						buscarDadosGoogle(criterio);
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
@@ -192,6 +207,33 @@ public class Principal extends JFrame {
 			}
 
 		});
+
+	}
+
+	protected void buscarDadosGoogle(String criterio) {
+
+		final ExecutorService executor = Executors.newFixedThreadPool(1);
+
+		final Future<List<String>> future = executor.submit(new GoogleSearchApi(criterio));
+
+		try {
+			final List<String> webSites = future.get();
+
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < webSites.size(); i++) {
+
+				sb.append((webSites).get(i));
+				sb.append("\n");
+
+			}
+
+			txtGoogle.setText(sb.toString());
+
+			executor.shutdown();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 
@@ -249,6 +291,9 @@ public class Principal extends JFrame {
 				tblPostgres.setModel(model);
 
 			}
+
+			executor.shutdown();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

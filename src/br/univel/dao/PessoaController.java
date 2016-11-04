@@ -30,7 +30,7 @@ public class PessoaController implements Callable<List<Pessoa>> {
 			// if
 			if (Character.isDigit(criterio.charAt(i)) == true) {
 				temNumero++;
-				numeroEncontrado = i;
+				numeroEncontrado = criterio.indexOf(i);
 				break;
 			}
 

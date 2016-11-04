@@ -53,12 +53,13 @@ public class PessoaDao {
 				pessoas.add(readResultSet(rs));
 			}
 
+			con.close();
+
 			return pessoas;
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 		return pessoas;
 
 	}
