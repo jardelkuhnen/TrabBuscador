@@ -47,7 +47,7 @@ public class TabelaModel extends AbstractTableModel {
 
 	public Object getValueAt(int row, int column) {
 
-		Object objeto = lista.get(0);
+		Object objeto = lista.get(row);
 
 		Class<?> classe = objeto.getClass();
 

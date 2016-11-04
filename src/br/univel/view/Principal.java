@@ -194,10 +194,10 @@ public class Principal extends JFrame {
 					try {
 
 						String criterio = txtCriterio.getText().trim();
-						// buscarDadosPostgres(criterio);
+						buscarDadosPostgres(criterio);
 						// buscarDadosMySql(criterio);
-						buscarDadosArq(criterio);
-						// buscarDadosGoogle(criterio);
+//						buscarDadosArq(criterio);
+//						buscarDadosGoogle(criterio);
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
@@ -261,6 +261,8 @@ public class Principal extends JFrame {
 
 			txtArquivos.setText(sb.toString());
 
+			executor.shutdown();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
