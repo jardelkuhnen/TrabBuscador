@@ -228,6 +228,7 @@ public class Principal extends JFrame {
 			}
 
 			txtGoogle.setText(sb.toString());
+			txtGoogle.setEditable(false);
 
 			executor.shutdown();
 
@@ -277,8 +278,8 @@ public class Principal extends JFrame {
 			model = new TabelaModel(dadosPostgres);
 
 			if (dadosPostgres.size() == 0) {
-				JOptionPane.showMessageDialog(Principal.this, "Nenhuma informação encontrada no banco MySql",
-						"Atenção", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(Principal.this, "Nenhuma informação encontrada no banco MySql", "Atenção",
+						JOptionPane.WARNING_MESSAGE);
 			} else {
 				tblPostgres.setModel(model);
 
