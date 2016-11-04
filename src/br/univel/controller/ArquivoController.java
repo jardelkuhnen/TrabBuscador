@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -31,21 +30,21 @@ public class ArquivoController implements Callable<List<String>> {
 
 			File file = arqs[i];
 
-			System.out.println(file.getName());
 			FileReader fReader = new FileReader(file);
 			BufferedReader buffer = new BufferedReader(fReader);
 
 			String linha = buffer.readLine();
+			int vezes = -1;
 
 			while (linha != null) {
 
-				int vezes = linha.lastIndexOf(criterio);
-
-				if (vezes >= 0) {
-					arquivosEncontrados.add(arqs[i].toString());
-				}
-
+				vezes = linha.lastIndexOf(criterio);
 				linha = buffer.readLine();
+
+			}
+
+			if (vezes >= 0) {
+				arquivosEncontrados.add(arqs[i].toString());
 			}
 
 			buffer.close();

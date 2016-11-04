@@ -194,10 +194,10 @@ public class Principal extends JFrame {
 					try {
 
 						String criterio = txtCriterio.getText().trim();
-						buscarDadosPostgres(criterio);
+						// buscarDadosPostgres(criterio);
 						// buscarDadosMySql(criterio);
-						// buscarDadosArq(criterio);
-						buscarDadosGoogle(criterio);
+						buscarDadosArq(criterio);
+						// buscarDadosGoogle(criterio);
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
@@ -247,7 +247,7 @@ public class Principal extends JFrame {
 		ExecutorService executor = Executors.newFixedThreadPool(qtdFile.length);
 
 		final Future<List<String>> future = executor
-				.submit((Callable<List<String>>) new ArquivoController(criterio, path).call());
+				.submit((Callable<List<String>>) new ArquivoController(criterio, path));
 
 		try {
 			List<String> arquivos = future.get();
@@ -256,6 +256,7 @@ public class Principal extends JFrame {
 
 			for (int i = 0; i < arquivos.size(); i++) {
 				sb.append(arquivos.get(i));
+				sb.append("\n");
 			}
 
 			txtArquivos.setText(sb.toString());
