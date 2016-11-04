@@ -267,9 +267,28 @@ public class Principal extends JFrame {
 
 	protected void buscarDadosMySql(String criterio) {
 
-		final ExecutorService executor = Executors.newSingleThreadExecutor();
+		final ExecutorService executor = Executors.newFixedThreadPool(1);
 
-		// Continuar implementação para o banco MySql.
+		final Future<List<Pessoa>> future = executor.submit(new PessoaController(criterio, TipoBanco.MYSQL));
+
+		try {
+			List<Pessoa> dadosPostgres = future.get();
+
+			model = new TabelaModel(dadosPostgres);
+
+			if (dadosPostgres.size() == 0) {
+				JOptionPane.showMessageDialog(Principal.this, "Nenhuma informação encontrada no banco MySql",
+						"Atenção", JOptionPane.WARNING_MESSAGE);
+			} else {
+				tblPostgres.setModel(model);
+
+			}
+
+			executor.shutdown();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 
