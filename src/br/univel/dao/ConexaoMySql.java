@@ -10,9 +10,9 @@ import javax.swing.JOptionPane;
 
 public class ConexaoMySql {
 
-	private static final String URL_BANCO = "HRLBANCO MYSQL";
-	private static final String USER = "SENHA";
-	private static final String PASS = "PASS";
+	private static final String URL_BANCO = "jdbc:mysql://localhost/buscador";
+	private static final String USER = "1";
+	private static final String PASS = "1";
 
 	public static ResultSet rs;
 	public Statement stmt;

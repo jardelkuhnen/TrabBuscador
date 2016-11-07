@@ -53,6 +53,8 @@ public class Principal extends JFrame {
 	private JTextArea txtGoogle;
 	private JScrollPane scrollPane_2;
 	private JTextArea txtArquivos;
+	private JScrollPane scrollPane_3;
+	private JTable tblMySql;
 
 	/**
 	 * Launch the application.
@@ -119,12 +121,23 @@ public class Principal extends JFrame {
 		gbl_pnMysql.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
 		pnMysql.setLayout(gbl_pnMysql);
 
+		scrollPane_3 = new JScrollPane();
+		GridBagConstraints gbc_scrollPane_3 = new GridBagConstraints();
+		gbc_scrollPane_3.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane_3.gridx = 0;
+		gbc_scrollPane_3.gridy = 0;
+		pnMysql.add(scrollPane_3, gbc_scrollPane_3);
+
+		tblMySql = new JTable();
+		scrollPane_3.setViewportView(tblMySql);
+
 		pnArq = new JPanel();
 		tabbedPane.addTab("Arquivos", null, pnArq, null);
 		GridBagLayout gbl_pnArq = new GridBagLayout();
 		gbl_pnArq.columnWidths = new int[] { 36, 419, 0, 0 };
 		gbl_pnArq.rowHeights = new int[] { 30, 369, 0 };
-		gbl_pnArq.columnWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
+		gbl_pnArq.columnWeights = new double[] { 0.0, 1.0, 0.0,
+				Double.MIN_VALUE };
 		gbl_pnArq.rowWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
 		pnArq.setLayout(gbl_pnArq);
 
@@ -137,7 +150,7 @@ public class Principal extends JFrame {
 		pnArq.add(lblPath, gbc_lblPath);
 
 		txtPath = new JTextField();
-		txtPath.setText("E:\\Busca");
+		txtPath.setText("E:\\");
 		GridBagConstraints gbc_txtPath = new GridBagConstraints();
 		gbc_txtPath.gridwidth = 2;
 		gbc_txtPath.fill = GridBagConstraints.HORIZONTAL;
@@ -194,8 +207,9 @@ public class Principal extends JFrame {
 					try {
 
 						String criterio = txtCriterio.getText().trim();
+						
 						buscarDadosPostgres(criterio);
-						// buscarDadosMySql(criterio);
+						buscarDadosMySql(criterio);
 						buscarDadosArq(criterio);
 						buscarDadosGoogle(criterio);
 					} catch (Exception e1) {
@@ -214,7 +228,8 @@ public class Principal extends JFrame {
 
 		final ExecutorService executor = Executors.newFixedThreadPool(1);
 
-		final Future<List<String>> future = executor.submit(new GoogleSearchApi(criterio));
+		final Future<List<String>> future = executor
+				.submit(new GoogleSearchApi(criterio));
 
 		try {
 			final List<String> webSites = future.get();
@@ -233,6 +248,7 @@ public class Principal extends JFrame {
 			executor.shutdown();
 
 		} catch (Exception e) {
+			executor.shutdown();
 			e.printStackTrace();
 		}
 
@@ -247,7 +263,8 @@ public class Principal extends JFrame {
 		ExecutorService executor = Executors.newFixedThreadPool(qtdFile.length);
 
 		final Future<List<String>> future = executor
-				.submit((Callable<List<String>>) new ArquivoController(criterio, path));
+				.submit((Callable<List<String>>) new ArquivoController(
+						criterio, path));
 
 		try {
 			List<String> arquivos = future.get();
@@ -264,6 +281,7 @@ public class Principal extends JFrame {
 			executor.shutdown();
 
 		} catch (Exception e) {
+			executor.shutdown();
 			e.printStackTrace();
 		}
 
@@ -273,7 +291,8 @@ public class Principal extends JFrame {
 
 		final ExecutorService executor = Executors.newFixedThreadPool(1);
 
-		final Future<List<Pessoa>> future = executor.submit(new PessoaController(criterio, TipoBanco.MYSQL));
+		final Future<List<Pessoa>> future = executor
+				.submit(new PessoaController(criterio, TipoBanco.MYSQL));
 
 		try {
 			List<Pessoa> dadosPostgres = future.get();
@@ -281,16 +300,18 @@ public class Principal extends JFrame {
 			model = new TabelaModel(dadosPostgres);
 
 			if (dadosPostgres.size() == 0) {
-				JOptionPane.showMessageDialog(Principal.this, "Nenhuma informação encontrada no banco MySql", "Atenção",
-						JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(Principal.this,
+						"Nenhuma informação encontrada no banco MySql",
+						"Atenção", JOptionPane.WARNING_MESSAGE);
 			} else {
-				tblPostgres.setModel(model);
+				tblMySql.setModel(model);
 
 			}
 
 			executor.shutdown();
 
 		} catch (Exception e) {
+			executor.shutdown();
 			e.printStackTrace();
 		}
 
@@ -300,7 +321,8 @@ public class Principal extends JFrame {
 
 		final ExecutorService executor = Executors.newFixedThreadPool(1);
 
-		final Future<List<Pessoa>> future = executor.submit(new PessoaController(criterio, TipoBanco.POSTGRES));
+		final Future<List<Pessoa>> future = executor
+				.submit(new PessoaController(criterio, TipoBanco.POSTGRES));
 
 		try {
 			List<Pessoa> dadosPostgres = future.get();
@@ -308,7 +330,8 @@ public class Principal extends JFrame {
 			model = new TabelaModel(dadosPostgres);
 
 			if (dadosPostgres.size() == 0) {
-				JOptionPane.showMessageDialog(Principal.this, "Nenhuma informação encontrada no banco Postgres",
+				JOptionPane.showMessageDialog(Principal.this,
+						"Nenhuma informação encontrada no banco Postgres",
 						"Atenção", JOptionPane.WARNING_MESSAGE);
 			} else {
 				tblPostgres.setModel(model);
@@ -318,6 +341,7 @@ public class Principal extends JFrame {
 			executor.shutdown();
 
 		} catch (Exception e) {
+			executor.shutdown();
 			e.printStackTrace();
 		}
 
