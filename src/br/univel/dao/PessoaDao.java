@@ -18,7 +18,7 @@ public class PessoaDao {
 		this.tipoBanco = tipoBanco;
 	}
 
-	private static final String SQL_SELECT = "SELECT * FROM PESSOA WHERE ID LIKE ? OR NOME LIKE ? OR IDADE LIKE ? OR PROFISSAO LIKE ?";
+	private static final String SQL_SELECT = "SELECT * FROM PESSOA WHERE ID = ? OR NOME LIKE ? OR IDADE = ? OR PROFISSAO LIKE ?";
 
 	Connection con;
 	ResultSet rs = null;
@@ -46,6 +46,7 @@ public class PessoaDao {
 			stmt.setInt(3, pessoa.getIdade());
 			stmt.setString(4, "%" + pessoa.getProfissao() + "%");
 
+			
 			rs = stmt.executeQuery();
 
 			while (rs.next()) {

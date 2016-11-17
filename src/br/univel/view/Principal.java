@@ -9,6 +9,7 @@ import java.awt.Panel;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -27,6 +28,9 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import br.univel.controller.ArquivoController;
 import br.univel.controller.GoogleSearchApi;
@@ -136,8 +140,7 @@ public class Principal extends JFrame {
 		GridBagLayout gbl_pnArq = new GridBagLayout();
 		gbl_pnArq.columnWidths = new int[] { 36, 419, 0, 0 };
 		gbl_pnArq.rowHeights = new int[] { 30, 369, 0 };
-		gbl_pnArq.columnWeights = new double[] { 0.0, 1.0, 0.0,
-				Double.MIN_VALUE };
+		gbl_pnArq.columnWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
 		gbl_pnArq.rowWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
 		pnArq.setLayout(gbl_pnArq);
 
@@ -208,10 +211,11 @@ public class Principal extends JFrame {
 
 						String criterio = txtCriterio.getText().trim();
 
-						// buscarDadosPostgres(criterio);
-						buscarDadosMySql(criterio);
+						buscarDadosPostgres(criterio);
+						// buscarDadosMySql(criterio);
 						// buscarDadosArq(criterio);
 						buscarDadosGoogle(criterio);
+						txtCriterio.requestFocus();
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
@@ -228,8 +232,7 @@ public class Principal extends JFrame {
 
 		final ExecutorService executor = Executors.newFixedThreadPool(1);
 
-		final Future<List<String>> future = executor
-				.submit(new GoogleSearchApi(criterio));
+		final Future<List<String>> future = executor.submit(new GoogleSearchApi(criterio));
 
 		try {
 			final List<String> webSites = future.get();
@@ -263,8 +266,7 @@ public class Principal extends JFrame {
 		ExecutorService executor = Executors.newFixedThreadPool(qtdFile.length);
 
 		final Future<List<String>> future = executor
-				.submit((Callable<List<String>>) new ArquivoController(
-						criterio, path));
+				.submit((Callable<List<String>>) new ArquivoController(criterio, path));
 
 		try {
 			List<String> arquivos = future.get();
@@ -291,8 +293,7 @@ public class Principal extends JFrame {
 
 		final ExecutorService executor = Executors.newFixedThreadPool(1);
 
-		final Future<List<Pessoa>> future = executor
-				.submit(new PessoaController(criterio, TipoBanco.MYSQL));
+		final Future<List<Pessoa>> future = executor.submit(new PessoaController(criterio, TipoBanco.MYSQL));
 
 		try {
 			List<Pessoa> dadosPostgres = future.get();
@@ -300,11 +301,10 @@ public class Principal extends JFrame {
 			model = new TabelaModel(dadosPostgres);
 
 			if (dadosPostgres.size() == 0) {
-				JOptionPane.showMessageDialog(Principal.this,
-						"Nenhuma informação encontrada no banco MySql",
-						"Atenção", JOptionPane.WARNING_MESSAGE);
-
-				tblMySql.setModel(model);
+				JOptionPane.showMessageDialog(Principal.this, "Nenhuma informação encontrada no banco MySql", "Atenção",
+						JOptionPane.WARNING_MESSAGE);
+				
+				tblMySql.setModel(new DefaultTableModel());
 			} else {
 				tblMySql.setModel(model);
 
@@ -323,8 +323,7 @@ public class Principal extends JFrame {
 
 		final ExecutorService executor = Executors.newFixedThreadPool(1);
 
-		final Future<List<Pessoa>> future = executor
-				.submit(new PessoaController(criterio, TipoBanco.POSTGRES));
+		final Future<List<Pessoa>> future = executor.submit(new PessoaController(criterio, TipoBanco.POSTGRES));
 
 		try {
 			List<Pessoa> dadosPostgres = future.get();
@@ -332,10 +331,11 @@ public class Principal extends JFrame {
 			model = new TabelaModel(dadosPostgres);
 
 			if (dadosPostgres.size() == 0) {
-				JOptionPane.showMessageDialog(Principal.this,
-						"Nenhuma informação encontrada no banco Postgres",
+				JOptionPane.showMessageDialog(Principal.this, "Nenhuma informação encontrada no banco Postgres",
 						"Atenção", JOptionPane.WARNING_MESSAGE);
-				tblPostgres.setModel(model);
+
+				tblPostgres.setModel(new DefaultTableModel());
+
 			} else {
 				tblPostgres.setModel(model);
 
