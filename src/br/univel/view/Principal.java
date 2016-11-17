@@ -207,10 +207,10 @@ public class Principal extends JFrame {
 					try {
 
 						String criterio = txtCriterio.getText().trim();
-						
-						buscarDadosPostgres(criterio);
+
+						// buscarDadosPostgres(criterio);
 						buscarDadosMySql(criterio);
-						buscarDadosArq(criterio);
+						// buscarDadosArq(criterio);
 						buscarDadosGoogle(criterio);
 					} catch (Exception e1) {
 						e1.printStackTrace();
@@ -303,6 +303,8 @@ public class Principal extends JFrame {
 				JOptionPane.showMessageDialog(Principal.this,
 						"Nenhuma informação encontrada no banco MySql",
 						"Atenção", JOptionPane.WARNING_MESSAGE);
+
+				tblMySql.setModel(model);
 			} else {
 				tblMySql.setModel(model);
 
@@ -333,6 +335,7 @@ public class Principal extends JFrame {
 				JOptionPane.showMessageDialog(Principal.this,
 						"Nenhuma informação encontrada no banco Postgres",
 						"Atenção", JOptionPane.WARNING_MESSAGE);
+				tblPostgres.setModel(model);
 			} else {
 				tblPostgres.setModel(model);
 
