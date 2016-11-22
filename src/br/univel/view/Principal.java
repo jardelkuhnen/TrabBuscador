@@ -212,8 +212,8 @@ public class Principal extends JFrame {
 						String criterio = txtCriterio.getText().trim();
 
 						buscarDadosPostgres(criterio);
-						// buscarDadosMySql(criterio);
-						// buscarDadosArq(criterio);
+						buscarDadosMySql(criterio);
+						buscarDadosArq(criterio);
 						buscarDadosGoogle(criterio);
 						txtCriterio.requestFocus();
 					} catch (Exception e1) {
@@ -303,7 +303,7 @@ public class Principal extends JFrame {
 			if (dadosPostgres.size() == 0) {
 				JOptionPane.showMessageDialog(Principal.this, "Nenhuma informação encontrada no banco MySql", "Atenção",
 						JOptionPane.WARNING_MESSAGE);
-				
+
 				tblMySql.setModel(new DefaultTableModel());
 			} else {
 				tblMySql.setModel(model);
